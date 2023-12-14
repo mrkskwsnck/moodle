@@ -34,9 +34,11 @@ use stdClass;
 use core\oauth2\issuer;
 use core\oauth2\client;
 
+global $CFG;
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->dirroot.'/login/lib.php');
 
 /**
  * Plugin for oauth2 authentication.
@@ -621,7 +623,9 @@ class auth extends \auth_plugin_base {
 
         complete_user_login($user, $this->get_extrauserinfo());
         $this->update_picture($user);
-        redirect($redirecturl);
+
+        $urltogo = core_login_get_return_url();
+        redirect($urltogo);
     }
 
     /**
