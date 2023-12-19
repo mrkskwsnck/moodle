@@ -362,7 +362,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
             foreach ($matches[0] as $key => $match) {
                 $name = $matches[1][$key];
 
-                if ($this->temptables->is_temptable($name)) {
+                if ($this->temptables && $this->temptables->is_temptable($name)) {
                     $sql = str_replace($match, $this->temptables->get_correct_name($name), $sql);
                 } else {
                     $sql = str_replace($match, $this->prefix.$name, $sql);
@@ -549,7 +549,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
     protected function fetch_columns(string $table): array {
         $structure = array();
 
-        if (!$this->temptables->is_temptable($table)) { // normal table, get metadata from own schema
+        if ($this->temptables && !$this->temptables->is_temptable($table)) { // normal table, get metadata from own schema
             $sql = "SELECT column_name AS name,
                            data_type AS type,
                            numeric_precision AS max_length,
